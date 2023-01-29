@@ -1,0 +1,28 @@
+# Change to `0.0.0.0` (binds to all network interfaces) if you really
+# want to directly expose Einwurf without a reverse proxy and TLS
+# encryption in front of it:
+ip_address = "127.0.0.1"
+
+port = 3000
+
+# Possible values for `destination`:
+# - `notion`
+destination = "notion"
+
+[notion]
+# See https://developers.notion.com/docs/authorization on how to obtain
+# your personal, secret integration token.
+bearer_token = "INSERT-VALUE"
+
+# Select the page you want Einwurf to append to, and copy the
+# hexadecimal part from its URL.
+# Example URL (`6fa0c7a47c9ba4d215e791c29f561d2c` is the part you need):
+# https://www.notion.so/Destinationpage-6fa0c7a47c9ba4d215e791c29f561d2c
+page_id = "INSERT-VALUE"
+
+# Possible values for `block_type`:
+# - `bulleted_list_item`
+# - `numbered_list_item`
+# - `paragraph`
+# - `to_do`
+block_type = "to_do"
