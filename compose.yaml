@@ -1,0 +1,6 @@
+services:
+  einwurf:
+    image: ghcr.io/homeworkprod/einwurf:0.2.0
+    volumes:
+      - ./config.toml:/config.toml:ro
+    restart: unless-stopped
