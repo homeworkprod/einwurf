@@ -14,9 +14,13 @@ use std::net::IpAddr;
 mod cli;
 mod config;
 mod discord;
+mod mattermost;
 mod notion;
 
-use config::{load_config, Config, Destination, DiscordConfig, NotionBlockType, NotionConfig};
+use config::{
+    load_config, Config, Destination, DiscordConfig, MattermostConfig, NotionBlockType,
+    NotionConfig,
+};
 
 const HTML_FORM: Html<&'static str> = Html(
     r#"
@@ -119,6 +123,7 @@ const HTML_FORM: Html<&'static str> = Html(
 struct AppState {
     config: Config,
     discord_api_client: discord::ApiClient,
+    mattermost_api_client: mattermost::ApiClient,
     notion_api_client: notion::ApiClient,
 }
 
@@ -143,11 +148,13 @@ async fn main() -> Result<()> {
 
 fn build_app(config: Config) -> Router {
     let discord_api_client = create_discord_api_client(&config.discord);
+    let mattermost_api_client = create_mattermost_api_client(&config.mattermost);
     let notion_api_client = create_notion_api_client(&config.notion);
 
     let app_state = AppState {
         config,
         discord_api_client,
+        mattermost_api_client,
         notion_api_client,
     };
 
@@ -159,6 +166,11 @@ fn build_app(config: Config) -> Router {
 
 fn create_discord_api_client(config: &DiscordConfig) -> discord::ApiClient {
     discord::ApiClient {
+        webhook_url: config.webhook_url.to_owned(),
+    }
+}
+fn create_mattermost_api_client(config: &MattermostConfig) -> mattermost::ApiClient {
+    mattermost::ApiClient {
         webhook_url: config.webhook_url.to_owned(),
     }
 }
@@ -189,6 +201,7 @@ async fn accept_form(
 
     match app_state.config.destination {
         Destination::Discord => send_to_discord(app_state, content).await,
+        Destination::Mattermost => send_to_mattermost(app_state, content).await,
         Destination::Notion => send_to_notion(app_state, content).await,
     };
 
@@ -197,6 +210,11 @@ async fn accept_form(
 
 async fn send_to_discord(app_state: AppState, content: String) {
     let api_client = app_state.discord_api_client;
+    api_client.send_message(content).await;
+}
+
+async fn send_to_mattermost(app_state: AppState, content: String) {
+    let api_client = app_state.mattermost_api_client;
     api_client.send_message(content).await;
 }
 

@@ -15,6 +15,7 @@ pub(crate) struct Config {
     pub port: u16,
     pub destination: Destination,
     pub discord: DiscordConfig,
+    pub mattermost: MattermostConfig,
     pub notion: NotionConfig,
 }
 
@@ -22,11 +23,17 @@ pub(crate) struct Config {
 #[serde(rename_all = "snake_case")]
 pub(crate) enum Destination {
     Discord,
+    Mattermost,
     Notion,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 pub(crate) struct DiscordConfig {
+    pub webhook_url: String,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub(crate) struct MattermostConfig {
     pub webhook_url: String,
 }
 
@@ -65,6 +72,9 @@ mod tests {
             port: 3000,
             destination: Destination::Notion,
             discord: DiscordConfig {
+                webhook_url: "INSERT-WEBHOOK-URL".to_owned(),
+            },
+            mattermost: MattermostConfig {
                 webhook_url: "INSERT-WEBHOOK-URL".to_owned(),
             },
             notion: NotionConfig {

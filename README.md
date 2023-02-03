@@ -14,6 +14,7 @@ notes, and know they got appended to some list you can access later.
 Currently these destinations are supported:
 
 * [Discord](https://discord.com/): Write to a channel.
+* [Mattermost](https://mattermost.com/): Write to a channel.
 * [Notion](https://www.notion.so/): Append to a page.
 
 

@@ -7,10 +7,14 @@ port = 3000
 
 # Possible values for `destination`:
 # - `discord`
+# - `mattermost`
 # - `notion`
 destination = "notion"
 
 [discord]
+webhook_url = "INSERT-WEBHOOK-URL"
+
+[mattermost]
 webhook_url = "INSERT-WEBHOOK-URL"
 
 [notion]
