@@ -11,11 +11,10 @@ on your private computer).
 With **Einwurf**, you can just open the web interface, "drop" those
 notes, and know they got appended to some list you can access later.
 
-Currently [Notion](https://www.notion.so/) is the only supported
-destination. You choose a page and Einwurf will add to it.
+Currently these destinations are supported:
 
-More destinations could be added later (especially as some tools and
-services provide webhooks that are very easy to work with).
+* [Discord](https://discord.com/): Write to a channel.
+* [Notion](https://www.notion.so/): Append to a page.
 
 
 ## Usage

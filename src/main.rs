@@ -13,9 +13,10 @@ use std::net::IpAddr;
 
 mod cli;
 mod config;
+mod discord;
 mod notion;
 
-use config::{load_config, Config, Destination, NotionBlockType, NotionConfig};
+use config::{load_config, Config, Destination, DiscordConfig, NotionBlockType, NotionConfig};
 
 const HTML_FORM: Html<&'static str> = Html(
     r#"
@@ -117,6 +118,7 @@ const HTML_FORM: Html<&'static str> = Html(
 #[derive(Clone)]
 struct AppState {
     config: Config,
+    discord_api_client: discord::ApiClient,
     notion_api_client: notion::ApiClient,
 }
 
@@ -140,10 +142,12 @@ async fn main() -> Result<()> {
 }
 
 fn build_app(config: Config) -> Router {
+    let discord_api_client = create_discord_api_client(&config.discord);
     let notion_api_client = create_notion_api_client(&config.notion);
 
     let app_state = AppState {
         config,
+        discord_api_client,
         notion_api_client,
     };
 
@@ -151,6 +155,12 @@ fn build_app(config: Config) -> Router {
         .route("/", get(root))
         .route("/form", post(accept_form))
         .with_state(app_state)
+}
+
+fn create_discord_api_client(config: &DiscordConfig) -> discord::ApiClient {
+    discord::ApiClient {
+        webhook_url: config.webhook_url.to_owned(),
+    }
 }
 
 fn create_notion_api_client(config: &NotionConfig) -> notion::ApiClient {
@@ -178,10 +188,16 @@ async fn accept_form(
     let content = new_item.content.trim().into();
 
     match app_state.config.destination {
+        Destination::Discord => send_to_discord(app_state, content).await,
         Destination::Notion => send_to_notion(app_state, content).await,
     };
 
     Redirect::to("/")
+}
+
+async fn send_to_discord(app_state: AppState, content: String) {
+    let api_client = app_state.discord_api_client;
+    api_client.send_message(content).await;
 }
 
 async fn send_to_notion(app_state: AppState, content: String) {

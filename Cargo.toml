@@ -9,7 +9,7 @@ readme = "README.md"
 homepage = "https://homework.nwsnet.de/releases/e1ff/#einwurf"
 repository = "https://github.com/homeworkprod/einwurf"
 license = "MIT"
-keywords = ["notion", "webhook"]
+keywords = ["discord", "notion", "webhook"]
 
 [dependencies]
 anyhow = "1.0"

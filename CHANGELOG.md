@@ -3,6 +3,8 @@
 
 ## 0.2.0 (unreleased)
 
+- Added support for Discord as a destination.
+
 - Added `Dockerfile` and Compose file.
 
 

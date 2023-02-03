@@ -14,13 +14,20 @@ pub(crate) struct Config {
     pub ip_address: IpAddr,
     pub port: u16,
     pub destination: Destination,
+    pub discord: DiscordConfig,
     pub notion: NotionConfig,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum Destination {
+    Discord,
     Notion,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq)]
+pub(crate) struct DiscordConfig {
+    pub webhook_url: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq)]
@@ -57,6 +64,9 @@ mod tests {
             ip_address: IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)),
             port: 3000,
             destination: Destination::Notion,
+            discord: DiscordConfig {
+                webhook_url: "INSERT-WEBHOOK-URL".to_owned(),
+            },
             notion: NotionConfig {
                 bearer_token: "INSERT-VALUE".to_owned(),
                 page_id: "INSERT-VALUE".to_owned(),

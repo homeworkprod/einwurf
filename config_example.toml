@@ -6,8 +6,12 @@ ip_address = "127.0.0.1"
 port = 3000
 
 # Possible values for `destination`:
+# - `discord`
 # - `notion`
 destination = "notion"
+
+[discord]
+webhook_url = "INSERT-WEBHOOK-URL"
 
 [notion]
 # See https://developers.notion.com/docs/authorization on how to obtain
