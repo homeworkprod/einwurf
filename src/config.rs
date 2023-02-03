@@ -9,7 +9,7 @@ use std::fs::read_to_string;
 use std::net::IpAddr;
 use std::path::Path;
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub(crate) struct Config {
     pub ip_address: IpAddr,
     pub port: u16,
@@ -17,20 +17,20 @@ pub(crate) struct Config {
     pub notion: NotionConfig,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum Destination {
     Notion,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 pub(crate) struct NotionConfig {
     pub bearer_token: String,
     pub page_id: String,
     pub block_type: NotionBlockType,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum NotionBlockType {
     BulletedListItem,
@@ -44,4 +44,28 @@ pub(crate) fn load_config(path: &Path) -> Result<Config> {
     let text = read_to_string(path)?;
     let config: Config = toml::from_str(&text)?;
     Ok(config)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::net::Ipv4Addr;
+
+    #[test]
+    fn test_load_config() {
+        let expected = Config {
+            ip_address: IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)),
+            port: 3000,
+            destination: Destination::Notion,
+            notion: NotionConfig {
+                bearer_token: "INSERT-VALUE".to_owned(),
+                page_id: "INSERT-VALUE".to_owned(),
+                block_type: NotionBlockType::ToDo,
+            },
+        };
+
+        let actual = load_config(Path::new("config_example.toml"));
+        assert!(actual.is_ok());
+        assert_eq!(actual.unwrap(), expected);
+    }
 }
