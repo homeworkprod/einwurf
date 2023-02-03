@@ -5,7 +5,7 @@ and a submit button) without authentication and post them to another,
 likely access-restricted destination of choice.
 
 Use case: You are browsing the web on your phone or work computer and
-come across an idea or link you want to engage with later(say, at home
+come across an idea or link you want to engage with later (say, at home
 on your private computer).
 
 With **Einwurf**, you can just open the web interface, "drop" those
